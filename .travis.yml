@@ -35,4 +35,4 @@ after_success:
 # upload documentation to github.io (gh-pages branch)
   - cargo doc-upload
   - cargo install cargo-tarpaulin
-  - cargo tarpaulin --verbose --line --out Xml && bash <(curl -s https://codecov.io/bash)
+  - taskset -c 0 cargo tarpaulin --verbose --line --out Xml && bash <(curl -s https://codecov.io/bash)
