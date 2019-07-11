@@ -1,5 +1,6 @@
 language: rust
-
+sudo: required
+dist: trusty
 # Cache cargo symbols for faster build
 cache: cargo
 
@@ -32,8 +33,8 @@ script:
 
 after_success:
 # upload documentation to github.io (gh-pages branch)
-  - cargo doc-upload
+  # - cargo doc-upload
   - cargo install cargo-tarpaulin
-  - RUSTFLAGS="-C link-dead-code" cargo tarpaulin --no-count --skip-clean --out Xml
+  - RUSTFLAGS="-C link-dead-code" cargo tarpaulin --out Xml
   # - RUSTFLAGS="-C link-dead-code" cargo coverage -v
   - bash <(curl -s https://codecov.io/bash)
