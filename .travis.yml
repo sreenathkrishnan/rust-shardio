@@ -13,9 +13,14 @@ rust:
 # Dependencies of kcov, used for cargo-travis
 addons:
   apt:
-    apt:
-      packages:
-        - libssl-dev
+    packages:
+      - libcurl4-openssl-dev
+      - libelf-dev
+      - libdw-dev
+      - binutils-dev
+      - cmake
+    sources:
+      - kalakris-cmake
 
 before_script:
   - export PATH=$HOME/.cargo/bin:$PATH
@@ -34,5 +39,5 @@ script:
 after_success:
 # upload documentation to github.io (gh-pages branch)
   - cargo doc-upload
-  - cargo install cargo-tarpaulin
-  - taskset -c 0 cargo tarpaulin --verbose --line --out Xml && bash <(curl -s https://codecov.io/bash)
+  - cargo coverage
+  - bash <(curl -s https://codecov.io/bash)
