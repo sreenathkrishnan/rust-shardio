@@ -1,6 +1,10 @@
 language: rust
-sudo: required
-dist: trusty
+
+before_cache: |
+  if [[ "$TRAVIS_RUST_VERSION" == nightly ]]; then
+    RUSTFLAGS="--cfg procmacro2_semver_exempt" cargo install cargo-tarpaulin
+  fi
+
 # Cache cargo symbols for faster build
 cache: cargo
 
@@ -9,7 +13,7 @@ env:
     - RUST_BACKTRACE=1
 
 rust:
-  - stable
+  - nightly
 
 # Dependencies of kcov, used for cargo-travis
 addons:
@@ -31,10 +35,9 @@ script:
       cargo test &&
       cargo doc
 
-after_success:
-# upload documentation to github.io (gh-pages branch)
-  # - cargo doc-upload
-  - cargo install cargo-tarpaulin
-  - RUSTFLAGS="-C link-dead-code" cargo tarpaulin --out Xml
-  # - RUSTFLAGS="-C link-dead-code" cargo coverage -v
-  - bash <(curl -s https://codecov.io/bash)
+after_success: |
+  if [[ "$TRAVIS_RUST_VERSION" == nightly ]]; then
+    # Uncomment the following line for coveralls.io
+    RUSTFLAGS="-C link-dead-code" cargo tarpaulin -v --out Xml
+    bash <(curl -s https://codecov.io/bash)
+  fi
