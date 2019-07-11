@@ -39,5 +39,5 @@ script:
 after_success:
 # upload documentation to github.io (gh-pages branch)
   - cargo doc-upload
-  - cargo coverage
+  - RUSTFLAGS="-C link-dead-code" cargo coverage -v
   - bash <(curl -s https://codecov.io/bash)
